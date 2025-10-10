@@ -1,11 +1,10 @@
-import express, { Request, Response, Express } from "express";
+import express, { Express } from "express";
+import routes from "./routes/index.route"
 
 const app: Express = express()
 const port: number = 4000
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello World!")
-})
+app.use("/", routes)
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}`)

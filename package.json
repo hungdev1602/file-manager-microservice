@@ -7,7 +7,9 @@
     "start": "nodemon --exec \"node --inspect -r ts-node/register\" index.ts"
   },
   "dependencies": {
-    "express": "^5.1.0"
+    "@types/multer": "^2.0.0",
+    "express": "^5.1.0",
+    "multer": "^2.0.2"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",
