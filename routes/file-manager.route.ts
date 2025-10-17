@@ -9,4 +9,6 @@ router.post("/upload", upload.array("files"), fileManagerController.upload)
 
 router.patch("/change-file-name", upload.none(), fileManagerController.changeFileName)
 
+router.patch("/delete-file", upload.none(), fileManagerController.deleteFilePatch)
+
 export default router

@@ -88,3 +88,43 @@ export const changeFileName = async (req: Request, res: Response) => {
     })
   }
 }
+
+export const deleteFilePatch = async (req: Request, res: Response) => {
+  try {
+    const { folder, fileName } = req.body
+
+    if(!folder || !fileName){
+      res.json({
+        code: "error",
+        message: "Thiếu thông tin cần thiết"
+      })
+    }
+
+    // tạo đường dẫn đến file đó
+    const cleanFolder = folder.replace("/", "") // loại bỏ dấu /
+    const mediaDir = path.join(__dirname, "..", cleanFolder)
+    const filePath = path.join(mediaDir, fileName) // file
+
+    // check xem file cũ có tồn tại hay ko
+    if(!fs.existsSync(filePath)){
+      res.json({
+        code: "error",
+        message: "File cũ không tìm thấy"
+      })
+      return
+    }
+
+    // Đổi tên file
+    fs.unlinkSync(filePath)
+
+    res.json({
+      code: "success",
+      message: "Xoá File thành công"
+    })
+  } catch (error) {
+    res.json({
+      code: "error",
+      message: "Lỗi server khi xóa File"
+    })
+  }
+}
