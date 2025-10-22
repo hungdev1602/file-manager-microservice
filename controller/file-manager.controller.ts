@@ -114,7 +114,7 @@ export const deleteFilePatch = async (req: Request, res: Response) => {
       return
     }
 
-    // Đổi tên file
+    // xoá file
     fs.unlinkSync(filePath)
 
     res.json({
@@ -125,6 +125,84 @@ export const deleteFilePatch = async (req: Request, res: Response) => {
     res.json({
       code: "error",
       message: "Lỗi server khi xóa File"
+    })
+  }
+}
+
+export const folderCreatePost = async (req: Request, res: Response) => {
+  try {
+    const { folderName } = req.body
+
+    if(!folderName || typeof folderName !== "string"){
+      res.json({
+        code: "error",
+        message: "Thiếu tên Folder"
+      })
+      return
+    }
+
+    const mediaPath = path.join(__dirname, "..", "media") // Folder gốc để lưu mọi file
+    const folderPath = path.join(mediaPath, folderName) // Folder mới mà cần tạo
+    
+    if(fs.existsSync(folderPath)){ //check xem tồn tại tên Folder muốn tạo hay chưa
+      res.json({
+        code: "error",
+        message: "Folder này đã tồn tại"
+      })
+      return
+    }
+
+    fs.mkdirSync(folderPath)
+
+    res.json({
+      code: "success",
+      message: "Tạo Folder thành công"
+    })
+  } catch (error) {
+    res.json({
+      code: "error",
+      message: "Lỗi server khi tạo Folder FM"
+    })
+  }
+}
+
+export const listFolder = async (req: Request, res: Response) => {
+  try {
+    const mediaPath = path.join(__dirname, "..", "media") // Folder gốc lưu mọi file
+    
+    // Đọc danh sách file/folder trong media
+    const items = fs.readdirSync(mediaPath)
+    
+    const folders: {
+      name: string,
+      createdAt: Date
+    }[] = []
+
+    items.forEach(item => {
+      const itemPath = path.join(mediaPath, item)
+      const itemInfo = fs.statSync(itemPath) // thông tin chi tiết của file/folder
+
+      if(itemInfo.isDirectory()){ // nếu là Folder thì thêm vào mảng Folder
+        folders.push({
+          name: item,
+          createdAt: itemInfo.birthtime
+        })
+      }
+    })
+
+    
+    // Sắp xếp, cái nào tạo ra sau cùng thì cho lên trên cùng, làm giảm dần
+    folders.sort((a: any, b: any) => b.createdAt.getTime() - a.createdAt.getTime())
+
+    res.json({
+      code: "success",
+      message: "Thành công!",
+      listFolder: folders
+    })
+  } catch (error) {
+    res.json({
+      code: "error",
+      message: "Lỗi server khi lấy danh sách Folder"
     })
   }
 }
