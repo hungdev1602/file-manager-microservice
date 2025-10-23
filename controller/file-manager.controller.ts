@@ -168,7 +168,11 @@ export const folderCreatePost = async (req: Request, res: Response) => {
 
 export const listFolder = async (req: Request, res: Response) => {
   try {
-    const mediaPath = path.join(__dirname, "..", "media") // Folder gốc lưu mọi file
+    let mediaPath = path.join(__dirname, "..", "media") // Folder gốc lưu mọi file
+
+    if(req.query.folderPath) {
+      mediaPath = path.join(mediaPath, `${req.query.folderPath}`)
+    }
     
     // Đọc danh sách file/folder trong media
     const items = fs.readdirSync(mediaPath)
