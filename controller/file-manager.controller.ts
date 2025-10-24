@@ -131,7 +131,7 @@ export const deleteFilePatch = async (req: Request, res: Response) => {
 
 export const folderCreatePost = async (req: Request, res: Response) => {
   try {
-    const { folderName } = req.body
+    const { folderName, folderPath } = req.body
 
     if(!folderName || typeof folderName !== "string"){
       res.json({
@@ -142,9 +142,9 @@ export const folderCreatePost = async (req: Request, res: Response) => {
     }
 
     const mediaPath = path.join(__dirname, "..", "media") // Folder gốc để lưu mọi file
-    const folderPath = path.join(mediaPath, folderName) // Folder mới mà cần tạo
+    const targetPath = path.join(mediaPath, folderPath || "", folderName) // Folder mới mà cần tạo
     
-    if(fs.existsSync(folderPath)){ //check xem tồn tại tên Folder muốn tạo hay chưa
+    if(fs.existsSync(targetPath)){ //check xem tồn tại tên Folder muốn tạo hay chưa
       res.json({
         code: "error",
         message: "Folder này đã tồn tại"
@@ -152,7 +152,7 @@ export const folderCreatePost = async (req: Request, res: Response) => {
       return
     }
 
-    fs.mkdirSync(folderPath)
+    fs.mkdirSync(targetPath)
 
     res.json({
       code: "success",
@@ -170,7 +170,7 @@ export const listFolder = async (req: Request, res: Response) => {
   try {
     let mediaPath = path.join(__dirname, "..", "media") // Folder gốc lưu mọi file
 
-    if(req.query.folderPath) {
+    if(req.query.folderPath !== "undefined") {
       mediaPath = path.join(mediaPath, `${req.query.folderPath}`)
     }
     
