@@ -217,3 +217,53 @@ export const listFolder = async (req: Request, res: Response) => {
     })
   }
 }
+
+export const deleteFolder = async (req: Request, res: Response) => {
+  try {
+    const folderPath = req.body.folderPath
+
+    if(!folderPath){
+      res.json({
+        code: "error",
+        message: "Thiếu tên Folder"
+      })
+      return
+    }
+
+    if(folderPath == "media" || folderPath == "/media"){
+      res.json({
+        code: "error",
+        message: "Không được xoá Folder gốc"
+      })
+      return
+    }
+
+    // Tạo đường dẫn đến Folder cần xoá
+    const folderDir = path.join(__dirname, "..", folderPath)
+
+    if(!fs.existsSync(folderDir)){ // ko có folder cần xoá
+      res.json({
+        code: "error",
+        message: "Folder không tìm thấy"
+      })
+      return
+    }
+
+    // Xoá folder
+    fs.rmSync(folderDir, {
+      recursive: true
+    })
+    // recursive: để xoá các folder và các file con bên trong
+
+    res.json({
+      code: "success",
+      message: "Xoá Folder thành công"
+    })
+
+  } catch (error) {
+    res.json({
+      code: "error",
+      message: "Lỗi server khi xóa Folder"
+    })
+  }
+}

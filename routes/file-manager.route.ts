@@ -15,4 +15,6 @@ router.post("/folder/create", upload.none(), fileManagerController.folderCreateP
 
 router.get("/folder/list", fileManagerController.listFolder)
 
+router.patch("/folder/delete", upload.none(), fileManagerController.deleteFolder)
+
 export default router
