@@ -17,7 +17,7 @@ export const upload = (req: Request, res: Response) => {
 
     // Check thêm folderPath
     const folderPath = req.body.folderPath
-    if(folderPath != "null"){
+    if(folderPath){
       mediaDir = path.join(mediaDir, folderPath)
     }
 
@@ -26,7 +26,7 @@ export const upload = (req: Request, res: Response) => {
       const savePath = path.join(mediaDir, filename)
       fs.writeFileSync(savePath, file.buffer) // lưu file vào mục media, tên file sẽ là savePath
       saveLinks.push({
-        folder: "/media" + (folderPath != "null" ? `/${folderPath}` : ""),
+        folder: "/media" + (folderPath ? `/${folderPath}` : ""),
         filename: filename,
         mimetype: file.mimetype,
         size: file.size
@@ -39,6 +39,7 @@ export const upload = (req: Request, res: Response) => {
       saveLinks: saveLinks
     })
   } catch (error) {
+    // console.log(error)
     res.json({
       code: "error",
       message: "Lỗi upload"
