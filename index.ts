@@ -1,5 +1,8 @@
 import express, { Express } from "express";
+import dotenv from "dotenv"
+dotenv.config()
 import routes from "./routes/index.route"
+
 
 const app: Express = express()
 const port: number = 4000
