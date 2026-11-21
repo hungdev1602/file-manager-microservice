@@ -27,7 +27,7 @@ let sharp: any = null
 try {
   sharp = require("sharp")
 } catch (error) {
-  console.log("Không tải được thư viện sharp (chạy lại yarn install), ảnh sẽ không được thu nhỏ:", error)
+  console.log("Không tải được thư viện sharp (chạy lại npm install), ảnh sẽ không được thu nhỏ:", error)
 }
 
 // ?w=500 => 640 (chiều rộng cho phép gần nhất, lớn hơn hoặc bằng)
